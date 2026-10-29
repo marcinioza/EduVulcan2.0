@@ -408,3 +408,130 @@ body {
         max-width: 100%;
     }
 }
+
+
+/* ===================================
+   EDUVULCAN 2.0 - LOGIN PAGE
+=================================== */
+
+body.login-page {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 15% 15%, #e1e7ff 0, transparent 35%),
+        radial-gradient(circle at 85% 85%, #dceefb 0, transparent 35%),
+        #f5f7fc;
+}
+
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 16px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 44px 40px;
+    background: #ffffff;
+    border: 1px solid #e8edf5;
+    border-radius: 22px;
+    box-shadow: 0 20px 65px rgba(25, 38, 72, 0.09);
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 34px;
+}
+
+.login-brand-icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5, #818cf8);
+    color: white;
+    font-size: 30px;
+    font-weight: 800;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+}
+
+.login-brand h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #101828;
+    margin-bottom: 6px;
+}
+
+.login-brand h1 span {
+    color: #6366f1;
+}
+
+.login-brand p,
+.login-heading p {
+    color: #8290a8;
+    font-size: 13px;
+}
+
+.login-heading {
+    margin-bottom: 28px;
+}
+
+.login-heading h2 {
+    font-size: 22px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.login-page .form-group input {
+    max-width: 100%;
+}
+
+.login-submit {
+    width: 100%;
+    margin-top: 6px;
+    padding: 16px;
+}
+
+.login-alert {
+    padding: 13px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.login-alert.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.login-alert.success {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.login-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #edf1f7;
+    text-align: center;
+}
+
+.login-footer p {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 5px 0;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 22px;
+    }
+}
