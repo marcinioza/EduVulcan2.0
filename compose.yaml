@@ -37,6 +37,7 @@ services:
       MYSQL_DATABASE: eduvulcan
       MYSQL_USER: eduvulcan
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Ustaw MYSQL_PASSWORD w .env}
+      SECRET_KEY: ${SECRET_KEY:?Ustaw SECRET_KEY w .env}
 
     depends_on:
       db:
