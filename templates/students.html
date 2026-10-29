@@ -41,6 +41,8 @@
                 <h2>Dodaj nowego ucznia</h2>
 
                 <form action="/students" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
 
                     <div class="form-group">
                         <label for="first_name">Imię</label>
