@@ -12,7 +12,7 @@ from flask_login import (
     login_required
 )
 from models import User
-
+from flask_wtf.csrf import CSRFProtect
 from config import Config
 from models import db, Student, Subject, Grade
 
