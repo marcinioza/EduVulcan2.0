@@ -98,8 +98,21 @@ def admin_required(view_function):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    
+def redirect_by_role():
+    if current_user.role == "admin":
+        return redirect_by_role()
+
+    if current_user.role == "teacher":
+        return redirect(url_for("teacher_panel"))
+
+    if current_user.role == "student":
+        return redirect(url_for("student_panel"))
+
+    abort(403)
+
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect_by_role()
 
     if request.method == "POST":
         username = request.form.get("username", "").strip()
@@ -109,7 +122,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user)
-            return redirect(url_for("home"))
+            return redirect_by_role()
 
         flash("Nieprawidłowy login lub hasło.", "error")
 
@@ -363,6 +376,31 @@ def grades():
 # ==========================================
 # URUCHOMIENIE APLIKACJI
 # ==========================================
+
+
+@app.route("/teacher")
+@login_required
+def teacher_panel():
+    if current_user.role != "teacher":
+        abort(403)
+
+    return (
+        "Panel nauczyciela - w przygotowaniu.",
+        200
+    )
+
+
+@app.route("/student")
+@login_required
+def student_panel():
+    if current_user.role != "student":
+        abort(403)
+
+    return (
+        "Panel ucznia - w przygotowaniu.",
+        200
+    )
+
 
 if __name__ == "__main__":
     app.run(
