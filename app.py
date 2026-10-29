@@ -4,7 +4,13 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from flask_login import LoginManager
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    current_user,
+    login_required
+)
 from models import User
 
 from config import Config
@@ -37,6 +43,36 @@ def load_user(user_id):
         return db.session.get(User, int(user_id))
     except (ValueError, TypeError):
         return None
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for("home"))
+
+        flash("Nieprawidłowy login lub hasło.", "error")
+
+    return render_template("login.html")
+
+
+@app.route("/logout", methods=["POST"])
+@login_required
+def logout():
+    logout_user()
+    flash("Zostałeś wylogowany.", "success")
+    return redirect(url_for("login"))
+
+
 
 
 
