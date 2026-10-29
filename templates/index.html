@@ -23,6 +23,20 @@
                 <a href="/subjects">Przedmioty</a>
                 <a href="#">Ustawienia</a>
             </nav>
+
+            <div style="padding: 20px;">
+                <form action="{{ url_for('logout') }}" method="POST">
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button type="submit" class="btn btn-secondary">
+                        Wyloguj
+                    </button>
+                </form>
+            </div>
         </aside>
 
         <main class="main-content">
@@ -32,8 +46,10 @@
                     <h1>Panel główny</h1>
                     <p>Witaj w systemie EduVulcan2.0</p>
                 </div>
+
                 <div class="user-profile">
-                    Panel administratora
+                    <strong>{{ current_user.username }}</strong>
+                    <span> | Panel administratora</span>
                 </div>
             </header>
 
@@ -82,6 +98,7 @@
                                 <th>Data</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {% for grade in recent_grades %}
                             <tr>
