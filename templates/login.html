@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie | EduVulcan2.0</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page">
+
+    <main class="login-wrapper">
+        <section class="login-card">
+
+            <div class="login-brand">
+                <div class="login-brand-icon">E</div>
+                <h1>EduVulcan<span>2.0</span></h1>
+                <p>Elektroniczny dziennik szkolny</p>
+            </div>
+
+            <div class="login-heading">
+                <h2>Witaj ponownie!</h2>
+                <p>Zaloguj się, aby uzyskać dostęp do dziennika.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="login-alert {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/login" method="POST">
+
+                <div class="form-group">
+                    <label for="username">Login</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Wpisz swój login"
+                        autocomplete="username"
+                        maxlength="80"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Hasło</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Wpisz swoje hasło"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit"
+                        class="submit-btn login-submit">
+                    Zaloguj się
+                </button>
+
+            </form>
+
+            <div class="login-footer">
+                <p>Panel administratora, nauczyciela i ucznia</p>
+                <p>EduVulcan2.0 — System szkolny</p>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
