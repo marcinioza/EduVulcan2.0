@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVulcan2.0 | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>EduVulcan<span>2.0</span></h2>
+                <p>Elektroniczny dziennik</p>
+            </div>
+
+            <nav class="navigation">
+                <a href="/" class="active">Panel główny</a>
+                <a href="#">Uczniowie</a>
+                <a href="#">Oceny</a>
+                <a href="#">Przedmioty</a>
+                <a href="#">Ustawienia</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1>Panel główny</h1>
+                    <p>Witaj w systemie EduVulcan2.0</p>
+                </div>
+                <div class="user-profile">
+                    <span>Panel administratora</span>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <p>Liczba uczniów</p>
+                    <h2>0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Liczba ocen</p>
+                    <h2>0</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Średnia ocen</p>
+                    <h2>—</h2>
+                </div>
+
+                <div class="stat-card">
+                    <p>Liczba przedmiotów</p>
+                    <h2>0</h2>
+                </div>
+
+            </section>
+
+            <section class="content-card">
+                <h2>Ostatnio dodane oceny</h2>
+                <p>Nie dodano jeszcze żadnych ocen.</p>
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
