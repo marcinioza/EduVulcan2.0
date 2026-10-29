@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceny | EduVulcan2.0</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>EduVulcan<span>2.0</span></h2>
+                <p>Elektroniczny dziennik</p>
+            </div>
+
+            <nav class="navigation">
+                <a href="/">Panel główny</a>
+                <a href="/students">Uczniowie</a>
+                <a href="/grades" class="active">Oceny</a>
+                <a href="/subjects">Przedmioty</a>
+                <a href="#">Ustawienia</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1>Oceny</h1>
+                    <p>Wystawianie i przeglądanie ocen uczniów</p>
+                </div>
+                <div class="user-profile">
+                    Panel administratora
+                </div>
+            </header>
+
+            <section class="content-card">
+                <h2>Dodaj nową ocenę</h2>
+
+                <form action="/grades" method="POST">
+
+                    <div class="form-group">
+                        <label for="student_id">Uczeń</label>
+                        <select id="student_id" name="student_id" required>
+                            <option value="">Wybierz ucznia</option>
+                            {% for student in students %}
+                            <option value="{{ student.id }}">
+                                {{ student.first_name }}
+                                {{ student.last_name }}
+                                — {{ student.school_class }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject_id">Przedmiot</label>
+                        <select id="subject_id" name="subject_id" required>
+                            <option value="">Wybierz przedmiot</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">
+                                {{ subject.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="value">Ocena</label>
+                        <select id="value" name="value" required>
+                            <option value="">Wybierz ocenę</option>
+                            {% for value in [1, 2, 3, 4, 5, 6] %}
+                            <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        Dodaj ocenę
+                    </button>
+
+                </form>
+            </section>
+
+            <section class="content-card" style="margin-top: 24px;">
+                <h2>Lista ocen</h2>
+
+                <div style="overflow-x: auto;">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>Uczeń</th>
+                                <th>Klasa</th>
+                                <th>Przedmiot</th>
+                                <th>Ocena</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in grades %}
+                            <tr>
+                                <td>
+                                    {{ grade.student.first_name }}
+                                    {{ grade.student.last_name }}
+                                </td>
+                                <td>{{ grade.student.school_class }}</td>
+                                <td>{{ grade.subject.name }}</td>
+                                <td>{{ grade.value | int }}</td>
+                                <td>
+                                    {{ grade.created_at.strftime('%d.%m.%Y') }}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5">
+                                    Nie dodano jeszcze żadnych ocen.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>
