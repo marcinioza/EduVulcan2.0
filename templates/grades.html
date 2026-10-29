@@ -41,6 +41,7 @@
                 <h2>Dodaj nową ocenę</h2>
 
                 <form action="/grades" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">                    
 
                     <div class="form-group">
                         <label for="student_id">Uczeń</label>
