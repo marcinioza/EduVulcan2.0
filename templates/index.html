@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -7,7 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
     <div class="app-container">
 
         <aside class="sidebar">
@@ -18,9 +18,9 @@
 
             <nav class="navigation">
                 <a href="/" class="active">Panel główny</a>
-                <a href="#">Uczniowie</a>
-                <a href="#">Oceny</a>
-                <a href="#">Przedmioty</a>
+                <a href="/students">Uczniowie</a>
+                <a href="/grades">Oceny</a>
+                <a href="/subjects">Przedmioty</a>
                 <a href="#">Ustawienia</a>
             </nav>
         </aside>
@@ -33,7 +33,7 @@
                     <p>Witaj w systemie EduVulcan2.0</p>
                 </div>
                 <div class="user-profile">
-                    <span>Panel administratora</span>
+                    Panel administratora
                 </div>
             </header>
 
@@ -41,34 +41,71 @@
 
                 <div class="stat-card">
                     <p>Liczba uczniów</p>
-                    <h2>0</h2>
+                    <h2>{{ student_count }}</h2>
                 </div>
 
                 <div class="stat-card">
                     <p>Liczba ocen</p>
-                    <h2>0</h2>
+                    <h2>{{ grade_count }}</h2>
                 </div>
 
                 <div class="stat-card">
                     <p>Średnia ocen</p>
-                    <h2>—</h2>
+                    <h2>
+                        {% if average_grade is not none %}
+                            {{ "%.2f"|format(average_grade|float) }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </h2>
                 </div>
 
                 <div class="stat-card">
                     <p>Liczba przedmiotów</p>
-                    <h2>0</h2>
+                    <h2>{{ subject_count }}</h2>
                 </div>
 
             </section>
 
             <section class="content-card">
                 <h2>Ostatnio dodane oceny</h2>
-                <p>Nie dodano jeszcze żadnych ocen.</p>
+
+                {% if recent_grades %}
+                <div style="overflow-x: auto;">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>Uczeń</th>
+                                <th>Klasa</th>
+                                <th>Przedmiot</th>
+                                <th>Ocena</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in recent_grades %}
+                            <tr>
+                                <td>
+                                    {{ grade.student.first_name }}
+                                    {{ grade.student.last_name }}
+                                </td>
+                                <td>{{ grade.student.school_class }}</td>
+                                <td>{{ grade.subject.name }}</td>
+                                <td>{{ grade.value|int }}</td>
+                                <td>
+                                    {{ grade.created_at.strftime('%d.%m.%Y') }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <p>Nie dodano jeszcze żadnych ocen.</p>
+                {% endif %}
             </section>
 
         </main>
-
     </div>
-
 </body>
 </html>
