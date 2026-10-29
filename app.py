@@ -4,6 +4,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
+from flask_login import LoginManager
+from models import User
 
 from config import Config
 from models import db, Student, Subject, Grade
@@ -17,6 +19,24 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 db.init_app(app)
+
+# Konfiguracja systemu logowania
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Strona, na którą trafiają niezalogowani użytkownicy
+login_manager.login_view = "login"
+login_manager.login_message = "Zaloguj się, aby kontynuować."
+login_manager.login_message_category = "error"
+
+
+# Odczytywanie użytkownika z sesji
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        return db.session.get(User, int(user_id))
+    except (ValueError, TypeError):
+        return None
 
 
 
