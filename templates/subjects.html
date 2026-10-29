@@ -40,6 +40,7 @@
                 <h2>Dodaj nowy przedmiot</h2>
 
                 <form action="/subjects" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">    
                     <div class="form-group">
                         <label for="name">Nazwa przedmiotu</label>
                         <input
