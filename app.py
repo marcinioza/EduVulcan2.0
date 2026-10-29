@@ -34,6 +34,10 @@ app.config["SECRET_KEY"] = secret_key
 
 db.init_app(app)
 
+# Ochrona formularzy przed atakami CSRF
+csrf = CSRFProtect()
+csrf.init_app(app)
+
 # Konfiguracja systemu logowania
 login_manager = LoginManager()
 login_manager.init_app(app)
