@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przedmioty | EduVulcan2.0</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>EduVulcan<span>2.0</span></h2>
+                <p>Elektroniczny dziennik</p>
+            </div>
+
+            <nav class="navigation">
+                <a href="/">Panel główny</a>
+                <a href="/students">Uczniowie</a>
+                <a href="#">Oceny</a>
+                <a href="/subjects" class="active">Przedmioty</a>
+                <a href="#">Ustawienia</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <h1>Przedmioty</h1>
+                    <p>Zarządzaj przedmiotami szkolnymi</p>
+                </div>
+                <div class="user-profile">
+                    Panel administratora
+                </div>
+            </header>
+
+            <section class="content-card">
+                <h2>Dodaj nowy przedmiot</h2>
+
+                <form action="/subjects" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nazwa przedmiotu</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            maxlength="100"
+                            required
+                            placeholder="Np. Matematyka"
+                        >
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        Dodaj przedmiot
+                    </button>
+                </form>
+            </section>
+
+            <section class="content-card" style="margin-top: 24px;">
+                <h2>Lista przedmiotów</h2>
+
+                <div style="overflow-x: auto;">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nazwa przedmiotu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject.id }}</td>
+                                <td>{{ subject.name }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="2">
+                                    Nie dodano jeszcze żadnych przedmiotów.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
