@@ -19,9 +19,31 @@ app.config["SECRET_KEY"] = os.environ.get(
 db.init_app(app)
 
 
+
 @app.route("/")
 def home():
-    return render_template("index.html")
+    student_count = db.session.query(Student).count()
+    grade_count = db.session.query(Grade).count()
+    subject_count = db.session.query(Subject).count()
+
+    average_grade = db.session.query(
+        db.func.avg(Grade.value)
+    ).scalar()
+
+    recent_grades = Grade.query.order_by(
+        Grade.created_at.desc(),
+        Grade.id.desc()
+    ).limit(5).all()
+
+    return render_template(
+        "index.html",
+        student_count=student_count,
+        grade_count=grade_count,
+        subject_count=subject_count,
+        average_grade=average_grade,
+        recent_grades=recent_grades
+    )
+
 
 
 @app.route("/students", methods=["GET", "POST"])
