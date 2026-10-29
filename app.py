@@ -2,8 +2,6 @@
 import os
 
 from flask import Flask, render_template, request, redirect, url_for, flash
-from sqlalchemy import func
-from sqlalchemy.exc import IntegrityError
 from flask_login import (
     LoginManager,
     login_user,
@@ -11,17 +9,23 @@ from flask_login import (
     current_user,
     login_required
 )
-from models import User
 from flask_wtf.csrf import CSRFProtect
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
+
 from config import Config
-from models import db, Student, Subject, Grade
+from models import db, Student, Subject, Grade, User
+
+
+# ==========================================
+# KONFIGURACJA APLIKACJI
+# ==========================================
 
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.database_url()
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Klucz sesji musi byc ustawiony w zmiennych srodowiskowych
 secret_key = os.environ.get("SECRET_KEY")
 
 if not secret_key or len(secret_key) < 32:
@@ -31,24 +35,29 @@ if not secret_key or len(secret_key) < 32:
 
 app.config["SECRET_KEY"] = secret_key
 
-
 db.init_app(app)
 
-# Ochrona formularzy przed atakami CSRF
+
+# ==========================================
+# OCHRONA CSRF
+# ==========================================
+
 csrf = CSRFProtect()
 csrf.init_app(app)
 
-# Konfiguracja systemu logowania
+
+# ==========================================
+# LOGOWANIE I SESJE
+# ==========================================
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Strona, na którą trafiają niezalogowani użytkownicy
 login_manager.login_view = "login"
 login_manager.login_message = "Zaloguj się, aby kontynuować."
 login_manager.login_message_category = "error"
 
 
-# Odczytywanie użytkownika z sesji
 @login_manager.user_loader
 def load_user(user_id):
     try:
@@ -56,6 +65,10 @@ def load_user(user_id):
     except (ValueError, TypeError):
         return None
 
+
+# ==========================================
+# LOGOWANIE
+# ==========================================
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -77,6 +90,10 @@ def login():
     return render_template("login.html")
 
 
+# ==========================================
+# WYLOGOWANIE
+# ==========================================
+
 @app.route("/logout", methods=["POST"])
 @login_required
 def logout():
@@ -85,10 +102,12 @@ def logout():
     return redirect(url_for("login"))
 
 
-
-
+# ==========================================
+# PANEL GŁÓWNY
+# ==========================================
 
 @app.route("/")
+@login_required
 def home():
     student_count = db.session.query(Student).count()
     grade_count = db.session.query(Grade).count()
@@ -113,8 +132,12 @@ def home():
     )
 
 
+# ==========================================
+# ZARZĄDZANIE UCZNIAMI
+# ==========================================
 
 @app.route("/students", methods=["GET", "POST"])
+@login_required
 def students():
     if request.method == "POST":
         first_name = request.form.get("first_name", "").strip()
@@ -149,10 +172,18 @@ def students():
         Student.first_name
     ).all()
 
-    return render_template("students.html", students=all_students)
+    return render_template(
+        "students.html",
+        students=all_students
+    )
 
+
+# ==========================================
+# ZARZĄDZANIE PRZEDMIOTAMI
+# ==========================================
 
 @app.route("/subjects", methods=["GET", "POST"])
+@login_required
 def subjects():
     if request.method == "POST":
         name = request.form.get("name", "").strip()
@@ -183,14 +214,22 @@ def subjects():
                     flash("Przedmiot został dodany.", "success")
                     return redirect(url_for("subjects"))
 
-    all_subjects = Subject.query.order_by(Subject.name).all()
+    all_subjects = Subject.query.order_by(
+        Subject.name
+    ).all()
 
     return render_template(
         "subjects.html",
         subjects=all_subjects
     )
 
+
+# ==========================================
+# ZARZĄDZANIE OCENAMI
+# ==========================================
+
 @app.route("/grades", methods=["GET", "POST"])
+@login_required
 def grades():
     if request.method == "POST":
         student_id = request.form.get("student_id", "")
@@ -208,7 +247,10 @@ def grades():
             subject = db.session.get(Subject, int(subject_id))
 
             if student is None or subject is None:
-                flash("Wybrany uczeń lub przedmiot nie istnieje.", "error")
+                flash(
+                    "Wybrany uczeń lub przedmiot nie istnieje.",
+                    "error"
+                )
 
             else:
                 new_grade = Grade(
@@ -220,11 +262,15 @@ def grades():
                 db.session.add(new_grade)
                 db.session.commit()
 
-                flash("Ocena została dodana pomyślnie.", "success")
+                flash(
+                    "Ocena została dodana pomyślnie.",
+                    "success"
+                )
                 return redirect(url_for("grades"))
 
     all_students = Student.query.order_by(
-        Student.last_name, Student.first_name
+        Student.last_name,
+        Student.first_name
     ).all()
 
     all_subjects = Subject.query.order_by(
@@ -232,7 +278,8 @@ def grades():
     ).all()
 
     all_grades = Grade.query.order_by(
-        Grade.created_at.desc(), Grade.id.desc()
+        Grade.created_at.desc(),
+        Grade.id.desc()
     ).all()
 
     return render_template(
@@ -241,6 +288,11 @@ def grades():
         subjects=all_subjects,
         grades=all_grades
     )
+
+
+# ==========================================
+# URUCHOMIENIE APLIKACJI
+# ==========================================
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
