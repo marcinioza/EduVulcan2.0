@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Git
+.git/
+.gitignore
+
+# Editors
+.vscode/
+.idea/
+
+# Tests and caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local files
+*.log
+*.db
+*.sqlite3
+.DS_Store
+
+# Docker configuration
+compose.yaml
