@@ -100,12 +100,6 @@ def subjects():
         subjects=all_subjects
     )
 
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
-
-
-
 @app.route("/grades", methods=["GET", "POST"])
 def grades():
     if request.method == "POST":
@@ -158,4 +152,5 @@ def grades():
         grades=all_grades
     )
 
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)
