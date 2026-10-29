@@ -371,3 +371,40 @@ body {
     }
 }
 
+
+/* GRADE FORM SELECTS */
+
+.form-group select {
+    width: 100%;
+    max-width: 520px;
+    height: 48px;
+    padding: 0 42px 0 15px;
+    background-color: #ffffff;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #172033;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-group select:invalid {
+    color: #94a3b8;
+}
+
+.form-group select option {
+    color: #172033;
+}
+
+@media (max-width: 700px) {
+    .form-group select {
+        max-width: 100%;
+    }
+}
