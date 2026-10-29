@@ -1,6 +1,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -58,7 +59,7 @@ class Grade(db.Model):
     subject = db.relationship("Subject", back_populates="grades")
 
     
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
