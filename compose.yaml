@@ -1,3 +1,4 @@
+
 name: eduvulcan2
 
 services:
@@ -8,8 +9,8 @@ services:
     environment:
       MYSQL_DATABASE: eduvulcan
       MYSQL_USER: eduvulcan
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Ustaw MYSQL_PASSWORD w pliku .env}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Ustaw MYSQL_ROOT_PASSWORD w pliku .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Ustaw MYSQL_PASSWORD w .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Ustaw MYSQL_ROOT_PASSWORD w .env}
 
     volumes:
       - mysql_data:/var/lib/mysql
@@ -22,6 +23,24 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+
+  web:
+    build: .
+    restart: unless-stopped
+
+    ports:
+      - "10114:5000"
+
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: eduvulcan
+      MYSQL_USER: eduvulcan
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Ustaw MYSQL_PASSWORD w .env}
+
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   mysql_data:
