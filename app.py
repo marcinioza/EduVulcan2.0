@@ -103,3 +103,59 @@ def subjects():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
+
+
+
+@app.route("/grades", methods=["GET", "POST"])
+def grades():
+    if request.method == "POST":
+        student_id = request.form.get("student_id", "")
+        subject_id = request.form.get("subject_id", "")
+        value = request.form.get("value", "")
+
+        if not student_id.isdigit() or not subject_id.isdigit():
+            flash("Wybierz poprawnego ucznia i przedmiot.", "error")
+
+        elif value not in {"1", "2", "3", "4", "5", "6"}:
+            flash("Ocena musi być liczbą od 1 do 6.", "error")
+
+        else:
+            student = db.session.get(Student, int(student_id))
+            subject = db.session.get(Subject, int(subject_id))
+
+            if student is None or subject is None:
+                flash("Wybrany uczeń lub przedmiot nie istnieje.", "error")
+
+            else:
+                new_grade = Grade(
+                    student_id=student.id,
+                    subject_id=subject.id,
+                    value=int(value)
+                )
+
+                db.session.add(new_grade)
+                db.session.commit()
+
+                flash("Ocena została dodana pomyślnie.", "success")
+                return redirect(url_for("grades"))
+
+    all_students = Student.query.order_by(
+        Student.last_name, Student.first_name
+    ).all()
+
+    all_subjects = Subject.query.order_by(
+        Subject.name
+    ).all()
+
+    all_grades = Grade.query.order_by(
+        Grade.created_at.desc(), Grade.id.desc()
+    ).all()
+
+    return render_template(
+        "grades.html",
+        students=all_students,
+        subjects=all_subjects,
+        grades=all_grades
+    )
+
+
