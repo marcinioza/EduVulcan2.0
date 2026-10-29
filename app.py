@@ -20,9 +20,17 @@ app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.database_url()
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = os.environ.get(
-    "SECRET_KEY", "dev-only-change-before-production"
-)
+
+# Klucz sesji musi byc ustawiony w zmiennych srodowiskowych
+secret_key = os.environ.get("SECRET_KEY")
+
+if not secret_key or len(secret_key) < 32:
+    raise RuntimeError(
+        "SECRET_KEY musi miec co najmniej 32 znaki."
+    )
+
+app.config["SECRET_KEY"] = secret_key
+
 
 db.init_app(app)
 
