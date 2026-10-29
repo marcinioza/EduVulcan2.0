@@ -83,7 +83,6 @@ def admin_required(view_function):
     @wraps(view_function)
     @login_required
     def decorated_function(*args, **kwargs):
-
         if current_user.role != "admin":
             abort(403)
 
@@ -93,15 +92,12 @@ def admin_required(view_function):
 
 
 # ==========================================
-# LOGOWANIE
+# PRZEKIEROWANIE WEDŁUG ROLI
 # ==========================================
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    
 def redirect_by_role():
     if current_user.role == "admin":
-        return redirect_by_role()
+        return redirect(url_for("home"))
 
     if current_user.role == "teacher":
         return redirect(url_for("teacher_panel"))
@@ -111,6 +107,13 @@ def redirect_by_role():
 
     abort(403)
 
+
+# ==========================================
+# LOGOWANIE
+# ==========================================
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
     if current_user.is_authenticated:
         return redirect_by_role()
 
@@ -180,7 +183,6 @@ def home():
 @app.route("/students", methods=["GET", "POST"])
 @admin_required
 def students():
-
     if request.method == "POST":
         first_name = request.form.get("first_name", "").strip()
         last_name = request.form.get("last_name", "").strip()
@@ -213,7 +215,6 @@ def students():
                 "Uczeń został dodany pomyślnie.",
                 "success"
             )
-
             return redirect(url_for("students"))
 
     all_students = Student.query.order_by(
@@ -234,7 +235,6 @@ def students():
 @app.route("/subjects", methods=["GET", "POST"])
 @admin_required
 def subjects():
-
     if request.method == "POST":
         name = request.form.get("name", "").strip()
 
@@ -242,10 +242,7 @@ def subjects():
             flash("Podaj nazwę przedmiotu.", "error")
 
         elif len(name) > 100:
-            flash(
-                "Nazwa przedmiotu jest za długa.",
-                "error"
-            )
+            flash("Nazwa przedmiotu jest za długa.", "error")
 
         else:
             existing = Subject.query.filter(
@@ -253,33 +250,24 @@ def subjects():
             ).first()
 
             if existing:
-                flash(
-                    "Taki przedmiot już istnieje.",
-                    "error"
-                )
-
+                flash("Taki przedmiot już istnieje.", "error")
             else:
                 subject = Subject(name=name)
-
                 db.session.add(subject)
 
                 try:
                     db.session.commit()
-
                 except IntegrityError:
                     db.session.rollback()
-
                     flash(
                         "Nie udało się dodać przedmiotu.",
                         "error"
                     )
-
                 else:
                     flash(
                         "Przedmiot został dodany.",
                         "success"
                     )
-
                     return redirect(url_for("subjects"))
 
     all_subjects = Subject.query.order_by(
@@ -299,7 +287,6 @@ def subjects():
 @app.route("/grades", methods=["GET", "POST"])
 @admin_required
 def grades():
-
     if request.method == "POST":
         student_id = request.form.get("student_id", "")
         subject_id = request.form.get("subject_id", "")
@@ -312,17 +299,13 @@ def grades():
             )
 
         elif value not in {"1", "2", "3", "4", "5", "6"}:
-            flash(
-                "Ocena musi być liczbą od 1 do 6.",
-                "error"
-            )
+            flash("Ocena musi być liczbą od 1 do 6.", "error")
 
         else:
             student = db.session.get(
                 Student,
                 int(student_id)
             )
-
             subject = db.session.get(
                 Subject,
                 int(subject_id)
@@ -348,7 +331,6 @@ def grades():
                     "Ocena została dodana pomyślnie.",
                     "success"
                 )
-
                 return redirect(url_for("grades"))
 
     all_students = Student.query.order_by(
@@ -374,9 +356,8 @@ def grades():
 
 
 # ==========================================
-# URUCHOMIENIE APLIKACJI
+# PANEL NAUCZYCIELA — W PRZYGOTOWANIU
 # ==========================================
-
 
 @app.route("/teacher")
 @login_required
@@ -384,11 +365,12 @@ def teacher_panel():
     if current_user.role != "teacher":
         abort(403)
 
-    return (
-        "Panel nauczyciela - w przygotowaniu.",
-        200
-    )
+    return "Panel nauczyciela - w przygotowaniu.", 200
 
+
+# ==========================================
+# PANEL UCZNIA — W PRZYGOTOWANIU
+# ==========================================
 
 @app.route("/student")
 @login_required
@@ -396,11 +378,12 @@ def student_panel():
     if current_user.role != "student":
         abort(403)
 
-    return (
-        "Panel ucznia - w przygotowaniu.",
-        200
-    )
+    return "Panel ucznia - w przygotowaniu.", 200
 
+
+# ==========================================
+# URUCHOMIENIE APLIKACJI
+# ==========================================
 
 if __name__ == "__main__":
     app.run(
