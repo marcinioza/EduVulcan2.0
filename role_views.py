@@ -128,7 +128,6 @@ def teacher_panel():
             flash("Ocena została zapisana.", "success")
             return redirect(url_for("roles.teacher_panel"))
 
-    # Nigdy nie udostępniamy nauczycielowi globalnego zestawienia ani średniej.
     students = Student.query.filter(Student.school_class.in_(classes)).order_by(Student.school_class, Student.last_name).all() if classes else []
     subjects = Subject.query.filter(Subject.id.in_(subject_ids)).order_by(Subject.name).all() if subject_ids else []
     if allowed_pairs:
@@ -139,7 +138,6 @@ def teacher_panel():
                   .limit(100).all())
     else:
         grades = []
-    # Używane do ukrycia w formularzu par przedmiot–klasa, których nauczyciel nie obsługuje.
     return render_template("teacher.html", assignments=assignments, students=students,
                            subjects=subjects, grades=grades, allowed_pairs=allowed_pairs)
 
@@ -155,3 +153,8 @@ def student_panel():
     grades = Grade.query.filter_by(student_id=student.id).order_by(Grade.created_at.desc(), Grade.id.desc()).all()
     average = db.session.query(func.avg(Grade.value)).filter(Grade.student_id == student.id).scalar()
     return render_template("student.html", student=student, grades=grades, average=average)
+
+
+# Nowe widoki dziennika klasowego i ocen szczegółowych.
+from journal_views import register_journal
+register_journal(role_bp, role_required)
