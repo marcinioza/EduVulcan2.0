@@ -1,0 +1,20 @@
+name: Python checks
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+      - name: Check syntax
+        run: python -m compileall -q .
+      - name: Run role security tests (temporary SQLite)
+        run: python -m pytest -q
+

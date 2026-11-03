@@ -19,10 +19,14 @@
             <nav class="navigation">
                 <a href="/">Panel główny</a>
                 <a href="/students">Uczniowie</a>
-                <a href="#">Oceny</a>
+                <a href="/grades">Oceny</a>
                 <a href="/subjects" class="active">Przedmioty</a>
-                <a href="#">Ustawienia</a>
+                <a href="{{ url_for('roles.admin_users') }}">Konta i przydziały</a>
             </nav>
+            <form class="sidebar-logout" action="{{ url_for('logout') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">Wyloguj</button>
+            </form>
         </aside>
 
         <main class="main-content">
