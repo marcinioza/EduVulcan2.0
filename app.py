@@ -100,10 +100,10 @@ def redirect_by_role():
         return redirect(url_for("home"))
 
     if current_user.role == "teacher":
-        return redirect(url_for("teacher_panel"))
+        return redirect(url_for("roles.teacher_panel"))
 
     if current_user.role == "student":
-        return redirect(url_for("student_panel"))
+        return redirect(url_for("roles.student_panel"))
 
     abort(403)
 
@@ -356,29 +356,11 @@ def grades():
 
 
 # ==========================================
-# PANEL NAUCZYCIELA — W PRZYGOTOWANIU
+# WIDOKI NAUCZYCIELA, UCZNIA I KONT
 # ==========================================
 
-@app.route("/teacher")
-@login_required
-def teacher_panel():
-    if current_user.role != "teacher":
-        abort(403)
-
-    return "Panel nauczyciela - w przygotowaniu.", 200
-
-
-# ==========================================
-# PANEL UCZNIA — W PRZYGOTOWANIU
-# ==========================================
-
-@app.route("/student")
-@login_required
-def student_panel():
-    if current_user.role != "student":
-        abort(403)
-
-    return "Panel ucznia - w przygotowaniu.", 200
+from role_views import role_bp
+app.register_blueprint(role_bp)
 
 
 # ==========================================

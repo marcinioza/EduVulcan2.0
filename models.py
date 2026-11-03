@@ -96,3 +96,23 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         from werkzeug.security import check_password_hash
         return check_password_hash(self.password_hash, password)
+
+
+class TeacherAssignment(db.Model):
+    """Przedmiot i klasa, w której dany nauczyciel może pracować."""
+    __tablename__ = "teacher_assignments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey("subjects.id"), nullable=False)
+    school_class = db.Column(db.String(30), nullable=False)
+
+    teacher = db.relationship("User", backref="teaching_assignments")
+    subject = db.relationship("Subject")
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            "teacher_id", "subject_id", "school_class",
+            name="uq_teacher_subject_class"
+        ),
+    )
