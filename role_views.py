@@ -61,7 +61,6 @@ def admin_users():
                 except IntegrityError:
                     db.session.rollback()
                     flash("Nie udało się utworzyć konta; sprawdź login i ucznia.", "error")
-
         elif action == "assign":
             teacher_id = request.form.get("teacher_id", "")
             subject_id = request.form.get("subject_id", "")
@@ -81,7 +80,6 @@ def admin_users():
                 except IntegrityError:
                     db.session.rollback()
                     flash("Nie udało się dodać przydziału.", "error")
-
         elif action == "remove_assignment":
             assignment_id = request.form.get("assignment_id", "")
             assignment = db.session.get(TeacherAssignment, int(assignment_id)) if assignment_id.isdigit() else None
@@ -92,7 +90,6 @@ def admin_users():
             flash("Przydział został usunięty. Istniejące oceny zachowano.", "success")
         else:
             abort(400)
-
         return redirect(url_for("roles.admin_users"))
 
     users = User.query.order_by(User.role, User.username).all()
@@ -158,3 +155,7 @@ def student_panel():
 # Nowe widoki dziennika klasowego i ocen szczegółowych.
 from journal_views import register_journal
 register_journal(role_bp, role_required)
+
+# Frekwencja jest osobnym modułem i osobnym blueprintem.
+from attendance_views import register_attendance
+register_attendance(role_bp)
