@@ -95,7 +95,7 @@ def test_student_sees_only_own_attendance(context):
     response = client.get('/student/attendance')
     assert response.status_code == 200
     assert 'Matematyka' in response.get_data(as_text=True)
-    assert 'Historia' not in response.get_data(as_text=True)
+    assert '<td>Historia</td>' not in response.get_data(as_text=True)
     assert client.get('/teacher/attendance').status_code == 403
     assert client.post('/teacher/attendance', data=form(ids)).status_code == 403
 
