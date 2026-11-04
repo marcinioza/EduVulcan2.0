@@ -153,3 +153,7 @@ from attendance_views import register_attendance
 register_attendance(role_bp)
 from message_views import register_messages
 register_messages(role_bp)
+
+# Plany lekcji klas - pliki PDF.
+from timetable_views import register_timetables
+register_timetables(role_bp)
